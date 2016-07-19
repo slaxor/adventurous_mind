@@ -1,0 +1,18 @@
+package migrate
+import "github.com/mattes/migrate/migrate"
+
+// Import any required drivers so that they are registered and available
+import _ "github.com/mattes/migrate/driver/postgres"
+
+// use synchronous versions of migration functions ...
+allErrors, ok := migrate.UpSync("driver://url", "./path")
+if !ok {
+  fmt.Println("Oh no ...")
+  // do sth with allErrors slice
+}
+
+// use the asynchronous version of migration functions ...
+pipe := migrate.NewPipe()
+go migrate.Up(pipe, "driver://url", "./path")
+// pipe is basically just a channel
+// write your own channel listener. see writePipe() in main.go as an example.
